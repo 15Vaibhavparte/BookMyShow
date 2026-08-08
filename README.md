@@ -7,7 +7,7 @@ Application traffic is exposed through an **AWS Network Load Balancer (NLB)** an
 
 
 ---
-##  DevSecOps CI/CD Pipeline Demonstration
+## ▶️ DevSecOps CI/CD Pipeline Demonstration
 
 The provided demonstration video showcases the complete, fully automated DevSecOps lifecycle of the BookMyShow clone, from a developer's code commit to a live production deployment on Amazon EKS. 
 
@@ -15,37 +15,18 @@ https://github.com/user-attachments/assets/2e3736c6-8e25-41b1-94e0-b3c1aacc46b7
 
 ##  Table of Contents
 
-1. [Project Overview](#project-overview)
-2. [Architecture Overview](#architecture-overview)
-3. [Repository Structure](#repository-structure)
-4. [Phase 1: Infrastructure Provisioning & IAM Setup](#phase-1-infrastructure-provisioning--iam-setup)
-5. [Phase 2: CI/CD Environment Setup](#phase-2-cicd-environment-setup)
-6. [Phase 3: CI/CD Pipeline Execution](#phase-3-cicd-pipeline-execution)
-7. [Phase 4: Monitoring & Observability](#phase-4-monitoring--observability)
-8. [Future Scope](#future-scope)
+1. [Architecture Overview](#architecture-overview)
+2. [Repository Structure](#repository-structure)
+3. [Phase 1: Infrastructure Provisioning & IAM Setup](#phase-1-infrastructure-provisioning--iam-setup)
+4. [Phase 2: CI/CD Environment Setup](#phase-2-cicd-environment-setup)
+5. [Phase 3: CI/CD Pipeline Execution](#phase-3-cicd-pipeline-execution)
+6. [Phase 4: Monitoring & Observability](#phase-4-monitoring--observability)
+7. [Future Scope](#future-scope)
 
 <br>
 
-#  Project Overview
 
-This project demonstrates an end-to-end **DevSecOps pipeline** capable of automatically building, scanning, deploying, and scaling a containerized React application on **Amazon EKS**.
-
-### Key Features
-
-| Feature | Description |
-|---------|-------------|
-|  Infrastructure as Code | AWS infrastructure provisioned using Terraform |
-|  Configuration Management | Automated server configuration with Ansible |
-|  Containerization | Dockerized React application |
-|  Kubernetes | High availability deployment on Amazon EKS |
-|  Auto Scaling | Horizontal Pod Autoscaler (HPA) |
-|  CI/CD | Fully automated Jenkins pipeline |
-|  DevSecOps | Trivy file system vulnerability scanning |
-|  Networking | AWS Network Load Balancer + Route 53 |
-
-<br>
-
-#  Architecture Overview
+# 📌 Architecture Overview
 
 
 | Phase | Component / Technology | Action / Workflow Description |
@@ -113,7 +94,7 @@ This phase establishes the foundational AWS infrastructure using **Terraform (In
 
 
 
-# 🏗️ 1. Infrastructure as Code (Terraform)
+## 🏗️ 1. Infrastructure as Code (Terraform)
 
 The infrastructure is managed declaratively using **Terraform**, with all IaC files organized inside the `Tf-script/` directory.
 
@@ -204,7 +185,7 @@ resource "aws_instance" "bms_server" {
 
 <br>
 
-# 🔐 2. Identity & Access Management (IAM)
+## 🔐 2. Identity & Access Management (IAM)
 
 Instead of using the **AWS Root Account**, a dedicated **IAM User** is created for provisioning and managing the EKS cluster.
 
@@ -225,7 +206,7 @@ This follows the **Principle of Least Privilege (PoLP)** by granting only the pe
 ---
 <br>
 
-# ☸️ 3. Amazon EKS Cluster Creation & Management
+## ☸️ 3. Amazon EKS Cluster Creation & Management
 
 ### What is Amazon EKS?
 
@@ -234,7 +215,7 @@ This follows the **Principle of Least Privilege (PoLP)** by granting only the pe
 AWS manages the **Kubernetes Control Plane** (API Server, Scheduler, etcd, and Controller Manager) across multiple Availability Zones, while users provision **Worker Nodes** to run application workloads.
 
 
-##  3.1 Required CLI Tools
+### 🔧 3.1 Required CLI Tools
 
 Before creating the EKS cluster, the **BMS-Server** must have the required Kubernetes management tools installed.
 
@@ -246,7 +227,7 @@ sudo apt update
 
 ---
 
-###  Install kubectl
+### 📦 Install kubectl
 
 `kubectl` is the official Kubernetes command-line tool used to communicate with the Kubernetes API Server.
 
@@ -273,7 +254,7 @@ kubectl version --short --client
 
 ---
 
-###  Install eksctl
+### 📦 Install eksctl
 
 `eksctl` is the official CLI utility used to create and manage Amazon EKS clusters.
 
@@ -299,12 +280,12 @@ eksctl version
 
 <br>
 
-##  3.2 EKS Cluster Provisioning Workflow
+### 🚀 3.2 EKS Cluster Provisioning Workflow
 
 The cluster is provisioned in multiple stages to maintain better control over networking, security, and compute resources.
 
 
-### Step A: Create the EKS Control Plane Configuration File
+### ⚪ Step 1: Create the EKS Control Plane Configuration File
 
 To deploy the Kubernetes Control Plane into an existing custom VPC and specific subnets, use a declarative YAML configuration file instead of standard CLI flags.
 
@@ -339,7 +320,7 @@ managedNodeGroups: []
 | `vpc.subnets.public` | Maps the public subnets to `ap-south-1a` and `ap-south-1b`, connecting the cluster to the existing network architecture. |
 | `managedNodeGroups: []` | Provisions only the control plane initially and prevents automatic worker-node creation, equivalent to `--without-nodegroup`. |
 
-### Step B: Execute Cluster Creation
+### ⚪ Step 2: Execute Cluster Creation
 
 After saving `cluster.yaml`, provision the EKS cluster using:
 
@@ -354,7 +335,7 @@ eksctl create cluster -f cluster.yaml
 <p align="center"><font color="gray"><i>Amazon EKS Cluster Active Status</i></font></p>
 <br>
 
-## Step 2 — Associate IAM OIDC Provider (IRSA)
+## ⚪ Step 3 — Associate IAM OIDC Provider (IRSA)
 
 Enable **IAM Roles for Service Accounts (IRSA)** by associating an IAM OIDC Provider with the cluster.
 
@@ -376,7 +357,7 @@ eksctl utils associate-iam-oidc-provider \
 
 
 
-## Step 3 — Create a Managed Worker Node Group
+## ⚪ Step 4 — Create a Managed Worker Node Group
 
 Provision the EC2 Worker Nodes that will host Kubernetes workloads.
 
@@ -437,29 +418,29 @@ The managed node group automatically receives permissions for:
 > **Note:** Worker Node provisioning typically completes within **5–10 minutes**.
 
 
-##  Outcome of Phase 1: Infrastructure & Cluster Provisioning
+## ✅ Outcome of Phase 1: Infrastructure & Cluster Provisioning
 
 By completing this phase, the entire cloud foundation and Kubernetes platform are provisioned, secured, and ready for application deployment.
 
 | Component | Outcome |
 |-----------|---------|
-| ** Automated Cloud Infrastructure** | AWS networking and the **BMS-Server EC2** instance are provisioned declaratively using **Terraform**. |
-| ** Bootstrapped CI/CD Server** | `resource.sh` automatically installs **Docker, Jenkins, Trivy, SonarQube**, and other required DevOps tools. |
-| ** Secure IAM Configuration** | A dedicated **IAM User** with **least-privilege policies** manages AWS resources securely without using the Root Account. |
-| ** Amazon EKS Control Plane** | The **bookmyshow-eks** cluster is successfully created with **IAM OIDC Provider (IRSA)** enabled for secure pod-level authentication. |
-| ** Managed Worker Nodes** | A managed **Node Group** with **Auto Scaling** is deployed and securely connected to the Kubernetes Control Plane. |
-| ** Deployment Ready** | The Kubernetes environment is fully configured and prepared for deploying application workloads and handling production traffic. |
+| **Automated Cloud Infrastructure** | AWS networking and the **BMS-Server EC2** instance are provisioned declaratively using **Terraform**. |
+| **Bootstrapped CI/CD Server** | `resource.sh` automatically installs **Docker, Jenkins, Trivy, SonarQube**, and other required DevOps tools. |
+| **Secure IAM Configuration** | A dedicated **IAM User** with **least-privilege policies** manages AWS resources securely without using the Root Account. |
+| **Amazon EKS Control Plane** | The **bookmyshow-eks** cluster is successfully created with **IAM OIDC Provider (IRSA)** enabled for secure pod-level authentication. |
+| **Managed Worker Nodes** | A managed **Node Group** with **Auto Scaling** is deployed and securely connected to the Kubernetes Control Plane. |
+| **Deployment Ready** | The Kubernetes environment is fully configured and prepared for deploying application workloads and handling production traffic. |
 
 <br>
 
 
-#  Phase 2: CI/CD Environment Setup
+# ⚙️ Phase 2: CI/CD Environment Setup
 
 This phase focuses on configuring the **CI/CD server (Jenkins)** and the **code quality platform (SonarQube)** to automate application building, testing, security scanning, and deployment.
 
 ---
 
-#  1. SonarQube Configuration
+# 🔍 1. SonarQube Configuration
 
 **SonarQube** performs **Static Application Security Testing (SAST)** and continuously analyzes the source code to identify:
 
@@ -470,7 +451,7 @@ This phase focuses on configuring the **CI/CD server (Jenkins)** and the **code 
 
 ---
 
-## SonarQube Setup
+##  SonarQube Setup
 
 | Configuration | Details |
 |--------------|---------|
@@ -488,7 +469,7 @@ docker run -d \
 
 ---
 
-## Initial Access
+##  Initial Access
 
 | Property | Value |
 |----------|-------|
@@ -499,7 +480,7 @@ docker run -d \
 
 ---
 
-## SonarQube Authentication Token
+##  SonarQube Authentication Token
 
 A dedicated **User Token** is generated from **My Account → Security** and later stored securely in Jenkins Credentials.
 
@@ -518,8 +499,9 @@ Configure a **Webhook** inside the SonarQube project settings that points to the
 This enables the Jenkins pipeline to use the `waitForQualityGate()` step, allowing the pipeline to pause until SonarQube completes code analysis and returns the Quality Gate result.
 
 ---
+<br>
 
-#  2. Jenkins Configuration
+# 🚀 2. Jenkins Configuration
 
 Jenkins serves as the central automation engine responsible for building, scanning, containerizing, and deploying the application.
 
@@ -583,15 +565,14 @@ Jenkins is configured to send automated pipeline notifications using **Gmail SMT
 
 ### Build Notification Triggers
 
--  Build Success
--  Build Failure
--  Always
+- ✅ Build Success
+- ❌ Build Failure
+- 🔄️ Always
 
 This provides developers with immediate feedback after every pipeline execution.
 
----
 
-##  Outcome of Phase 2
+## ✅ Outcome of Phase 2
 
 After completing this phase, the CI/CD environment is fully configured with:
 
@@ -602,7 +583,9 @@ After completing this phase, the CI/CD environment is fully configured with:
 - Automated email notifications
 - Production-ready CI/CD pipeline foundation
 
-# Phase 3: CI/CD Pipeline Execution
+<br>
+
+# 🔄️ Phase 3: CI/CD Pipeline Execution
 
 In this phase, a **Jenkins Pipeline** automates the complete build, security scan, containerization, and deployment process for the application. Before execution, the Jenkins server is authenticated with AWS using `aws configure`, enabling secure access to the EKS cluster.
 
@@ -611,7 +594,7 @@ In this phase, a **Jenkins Pipeline** automates the complete build, security sca
 </p>
 <p align="center"><font color="gray"><i>Jenkins CI/CD Pipeline Execution Flow</i></font></p>
 
----
+
 
 ## Pipeline Workflow
 
@@ -630,9 +613,9 @@ In this phase, a **Jenkins Pipeline** automates the complete build, security sca
 | Deploy to Amazon EKS | Deploy application to Kubernetes |
 | Email Notification | Send deployment status |
 
----
 
-## Stage 1: Code Checkout
+
+## 📥 Stage 1: Code Checkout
 
 Removes the previous workspace and downloads the latest application source code from GitHub.
 
@@ -660,9 +643,9 @@ stage('Checkout from Git') {
 - Latest source code downloaded
 - Ready for build
 
----
 
-## Stage 2: Code Quality Analysis
+
+## 🔬 Stage 2: Code Quality Analysis
 
 Passes the codebase to the SonarQube server using the injected sonar-scanner tool and project keys to perform **static application security testing (SAST)**.
 
@@ -702,36 +685,10 @@ stage('Quality Gate') {
 <img width="900" height="520" alt="Screenshot 2026-07-26 114646" src="https://github.com/user-attachments/assets/c2c0fca5-1364-4e9d-971c-49eaaa688bd1" />
 <p align="center"><font color="gray"><i>SonarQube Static Code Analysis Dashboard Passed</i></font></p>
 
----
 
-## Stage 3: Dependency Installation
 
-Navigates into the bookmyshow-app directory, safely removes any stale node_modules or package-lock.json files, and performs a fresh installation of necessary React frontend dependencies.
 
-### Jenkinsfile
-
-```groovy
-stage('Install Dependencies') {
-    steps {
-        sh '''
-        cd bookmyshow-app
-
-        rm -rf node_modules package-lock.json
-
-        npm install
-        '''
-    }
-}
-```
-
-**Outcome**
-
-- Removes stale packages
-- Installs latest dependencies
-- Ensures reproducible builds
-
----
-## Stage 4. Build Docker Image
+## 🐳 Stage 3. Build Docker Image
 
 Changes to the bookmyshow-app directory containing the Dockerfile and builds the container image locally on the Jenkins agent.
 ```groovy
@@ -749,9 +706,9 @@ stage ("Build Docker Image") {
 - Docker image created successfully
 - Application packaged for deployment
 
----
 
-## Stage 5. OWASP Dependency Scan
+
+## 🛡️ Stage 4. OWASP Dependency Scan
 
 Utilizes the OWASP Dependency-Check tool to scan the project dependencies for known, publicly disclosed vulnerabilities (CVEs).
 
@@ -781,9 +738,9 @@ This authenticated integration helps avoid public API rate limits, which can cau
 - Dependency vulnerability report generated in XML
 - Published within Jenkins
 
----
 
-## Stage 6: Security Scan
+
+## 🔎 Stage 5: Security Scan
 
 Executes the **Trivy** vulnerability scanner against the local file system to detect critical security flaws or exposed secrets.
 
@@ -808,7 +765,7 @@ stage('Trivy FS Scan') {
 
 ---
 
-## Stage 7. Tag & Push Docker Image
+## 🏷️ Stage 6. Tag & Push Docker Image
 
 Securely injects Docker credentials, logs into Docker Hub, and pushes the newly built image with both a dynamic build number tag and a latest backup tag.
 
@@ -844,7 +801,7 @@ stage ("Tag & Push to DockerHub") {
 
 ---
 
-## Stage 8. Local Container Deployment
+## 🖥️ Stage 7. Local Container Deployment
 
 Stops any existing local container instance and spins up the latest Docker image locally to verify runtime stability before Kubernetes deployment.
 
@@ -880,7 +837,7 @@ stage('Deploy to Container') {
 ---
 
 
-## Stage 9: Deploy to Amazon EKS
+## ☸️ Stage 8: Deploy to Amazon EKS
 
 Authenticates the Jenkins agent with AWS STS, dynamically updates the kubeconfig for the bookmyshow-eks cluster, applies the necessary Kubernetes manifests, and forces a zero-downtime rollout restart.
 
@@ -926,7 +883,7 @@ stage('Deploy to EKS Cluster') {
 <p align="center"><font color="gray"><i>Kubernetes EKS Cluster Resources Deployed Successfully</i></font></p>
 ---
 
-## Stage 10: Email Notification
+## 📧 Stage 9: Email Notification
 
 Automatically sends build results along with the Trivy security report.
 
@@ -959,7 +916,7 @@ post {
 <img width="900" height="520" alt="Screenshot 2026-07-26 114837" src="https://github.com/user-attachments/assets/27f264ab-01c8-48ac-b9ed-f87550a2714f" />
 <p align="center"><font color="gray"><i>Automated Jenkins Post Build Email Notification</i></font></p>
 
-## Phase 3 Outcome
+## ✅ Phase 3 Outcome
 
 After completing this phase:
 
@@ -977,7 +934,7 @@ After completing this phase:
 
 <br>
 
-# Phase 4: Monitoring & Observability
+# 📊 Phase 4: Monitoring & Observability
 
 A dedicated monitoring stack using **Prometheus, Node Exporter, and Grafana** is implemented to monitor infrastructure health, Jenkins performance, and overall system availability.
 
@@ -1157,7 +1114,7 @@ flowchart TD
 <p align="center"><font color="gray"><i>Grafana Jenkins Performance and Health Dashboard</i></font></p>
 ---
 
-## Phase 4 Outcome
+## ✅ Phase 4 Outcome
 
 The monitoring environment now provides:
 
@@ -1169,14 +1126,3 @@ The monitoring environment now provides:
 -  **Dedicated Monitoring Server** → Isolated observability environment
 
 
-
-#  Future Scope
-
-- Provision the EKS cluster using Terraform modules.
-- Integrate SonarQube for static code analysis.
-- Store secrets in AWS Secrets Manager.
-- Replace Docker Hub with Amazon ECR.
-- Implement Blue/Green deployments.
-- Integrate Argo CD for GitOps deployments.
-- Add Prometheus and Grafana monitoring.
-- Secure ingress using AWS WAF and ACM TLS certificates.

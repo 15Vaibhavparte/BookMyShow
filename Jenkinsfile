@@ -46,26 +46,6 @@ pipeline {
             }
         }
 
-        stage("Install NPM Dependencies") {         // Navigates into the React app directory, removes stale packages, and cleanly installs required Node.js dependencies.
-            steps {
-                // Navigate to the React app folder before installing dependencies
-                dir('bookmyshow-app') {
-                    sh '''
-                ls -la  # Verify package.json exists
-                if [ -f package.json ]; then
-                    rm -rf node_modules package-lock.json  # Remove old dependencies
-                    npm install  # Install fresh dependencies
-                    npm install react-is styled-components
-
-                else
-                    echo "Error: package.json not found in bookmyshow-app!"
-                    exit 1
-                fi
-                '''
-                }
-            }
-        }
-        
         stage ("Build Docker Image") {      // Compiles the React application into a standalone Docker container image using the local Dockerfile.
             steps {
                 // Navigate to the React app folder so it uses bookmyshow-app/Dockerfile
