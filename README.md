@@ -1,4 +1,4 @@
-#  BookMyShow Clone – DevSecOps CI/CD & Amazon EKS Deployment
+# 🎬 BookMyShow Clone – DevSecOps CI/CD & Amazon EKS Deployment
 
 A production-grade, highly available deployment of a **BookMyShow Clone** demonstrating a complete **DevSecOps** workflow. The project leverages **Jenkins** for CI/CD, **Docker** for containerization, **Terraform** for Infrastructure as Code (IaC), **Ansible** for configuration management, and **Amazon EKS (Elastic Kubernetes Service)** for container orchestration.
 
@@ -7,7 +7,7 @@ Application traffic is exposed through an **AWS Network Load Balancer (NLB)** an
 
 
 ---
-##  DevSecOps CI/CD Pipeline Demonstration
+## ▶️ DevSecOps CI/CD Pipeline Demonstration
 
 The provided demonstration video showcases the complete, fully automated DevSecOps lifecycle of the BookMyShow clone, from a developer's code commit to a live production deployment on Amazon EKS. 
 
@@ -22,10 +22,11 @@ https://github.com/user-attachments/assets/2e3736c6-8e25-41b1-94e0-b3c1aacc46b7
 5. [Phase 3: CI/CD Pipeline Execution](#phase-3-cicd-pipeline-execution)
 6. [Phase 4: Monitoring & Observability](#phase-4-monitoring--observability)
 
+
 <br>
 
 
-#  Architecture Overview
+# 📌 Architecture Overview
 
 
 | Phase | Component / Technology | Action / Workflow Description |
